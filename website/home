@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My New Page</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <main>
+    <h1>My New Page</h1>
+    <p>This is a starter HTML page in pages/my-page/index.html.</p>
+  </main>
+</body>
+</html>
