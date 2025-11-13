@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quartic Polynomials: Complex Roots, Derivatives, and Parametric Curves</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1, h2, h3 { color: #333; }
+        .equation { text-align: center; margin: 20px 0; }
+        ul { margin-left: 20px; }
+        svg { border: 1px solid #ccc; margin: 10px 0; display: block; margin-left: auto; margin-right: auto; }
+        .figure-caption { text-align: center; font-style: italic; margin-top: -10px; }
+    </style>
+</head>
+<body>
+    <h1>Extension to Complex Roots: P''(λ) and Parametric Curves</h1>
+    <p>Building on the quartic case, we extend to complex (or hypercomplex) roots λ_i without conjugate pairs, allowing complex coefficients. For real roots, the Coulomb gas lives on the real line with quadratic confinement, evoking parabolic potentials (e.g., harmonic oscillator approximations in relativity for bound states). For complex roots, we evaluate along paths respecting symmetry, like the real line or unit circle (if |λ_i|=1).</p>
+
+    <h2>General Form of P''(λ)</h2>
+    <p>For monic quartic \( P(\lambda) = \lambda^4 + a \lambda^3 + b \lambda^2 + c \lambda + d \):</p>
+    <div class="equation">
+        $$ P''(\lambda) = 12 \lambda^2 + 6 a \lambda + 2 b $$
+    </div>
+    <p>Here, \( a = -e_1 \), \( b = e_2 \) (complex in general). The leading coefficient 12 is always real, ensuring asymptotic behavior along the positive real direction in the complex plane.</p>
+
+    <h2>Parametric Curve for Real Parameter t</h2>
+    <p>Parametrize \( \lambda = t \in \mathbb{R} \). Then \( P''(t) = 12 t^2 + 6 a t + 2 b \), a quadratic in t with complex values. The curve in 3D space \( \langle \operatorname{Re}(P''(t)), \operatorname{Im}(P''(t)), t \rangle \) lies in a plane (since Im linear in t) and is a <em>parabolic arc</em>.</p>
+    <p>Projection to Re-Im plane: Solve \( \operatorname{Im}(P''(t)) = \operatorname{Im}(6 a) t + \operatorname{Im}(2 b) \) for t, substitute into Re: yields \( \operatorname{Re} = k [\operatorname{Im}]^2 + m \operatorname{Im} + n \) (parabola opening right, \( k = 12 / [\operatorname{Im}(6 a)]^2 > 0 \)).</p>
+    <p><em>It's always a parabola</em>—no loops here, even for |λ_i|=1. (Loops may appear in limited t-ranges or misplots due to the U-shape.)</p>
+
+    <h3>Example: Unit Circle Roots without Conjugates</h3>
+    <p>Roots: \( e^{i\pi/6}, e^{i\pi/3}, i, e^{i 2\pi/3} \) (all |λ_i|=1, sum ≈ 0.866 + 3.232 i).</p>
+    <p>Coefficients: a ≈ -0.866 - 3.232 i, b complex. Asymptotics match parabola: Re ≈ 0.032 Im² at large |Im| (error <2% at |t|=10).</p>
+    <p>Vertex (min Re): t ≈ 0.215, Re ≈ -8.76, Im ≈ 0.56.</p>
+
+    <h2>Evaluation on Unit Circle: Closed Loops from Symmetry</h2>
+    <p>For |λ_i|=1, rotational symmetry suggests parametrizing \( t = e^{i \phi} \), \( \phi \in [0, 2\pi) \). Now P''(t) traces a <em>closed curve</em> in the complex plane—a "loop-de-loop"!</p>
+    <p>This isn't a parabola (quadratic over line vs. circle), explaining the "different than expected function." The unit magnitudes induce circular symmetry, yielding periodic/closed paths.</p>
+
+    <h3>Symmetric Example: 4th Roots of Unity</h3>
+    <p>Roots: 1, i, -1, -i. Then P(λ) = λ⁴ - 1, P''(λ) = 12 λ².</p>
+    <p>On unit circle t = e^{i ϕ}: P''(t) = 12 e^{i 2 ϕ}—a circle of radius 12 centered at 0.</p>
+    <svg width="200" height="200" viewBox="-15 -15 30 30">
+        <circle cx="0" cy="0" r="12" stroke="blue" fill="none" stroke-width="2"/>
+        <text x="13" y="2" fill="blue" font-size="8">Circle (loop)</text>
+    </svg>
+    <div class="figure-caption">Projection: Unit circle in Re-Im plane (scaled).</div>
+
+    <h3>Relativity Tie-In</h3>
+    <p>For real λ_i (1D gas), the quadratic P''(t) ≈ 12 t² evokes parabolic trajectories (e.g., in special relativity, approximate hyperbolic worldlines near v=0). Complex extensions to hypercomplex (quaternions) could model 4D spacetime rotations, with unit "magnitudes" preserving Lorentz invariance—loops then represent closed timelike curves or helical paths in higher dims.</p>
+
+    <h2>Hypercomplex Extensions</h2>
+    <p>For quaternions ℍ (hypercomplex with i,j,k), define left/right polynomials (non-commutative). Roots on unit sphere |q_i|=1 preserve norm. P''(q) for q real (embedded ℝ ⊂ ℍ) remains "parabolic" in components, but on unit S³ path, expect toroidal/knotted loops due to SO(3) symmetry. SymPy doesn't natively support ℍ, but numerical quaternion libs (e.g., numpy-quaternion) can simulate.</p>
+
+    <h2>Notes</h2>
+    <ul>
+        <li>Real coeffs ⇒ Im(P''(t))=0 for real t (degenerate parabola on Re-t plane).</li>
+        <li>Loops only on closed paths like unit circle; real line always open parabola.</li>
+        <li>For your trials: If magnitudes=1 caused unexpected loop, likely unit-circle parametrization—switch to real t for parabola.</li>
+    </ul>
+    <p>Share your specific roots/params for custom plot/derivation!</p>
+</body>
+</html>
