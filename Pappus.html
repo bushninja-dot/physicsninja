@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pappus Quartic Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Pappus Quartic Prototype</h1>
+  <p>Quartic family p(x;m)=x⁴ + m x³ + m² x² + m³ x + m⁴ — roots, lines, Pappus intersections, collinearity test.</p>
+</header>
+
+<main>
+  <section id="controls">
+    <div class="control-row">
+      <label>Magnitude R <input id="mag" type="range" min="0.01" max="3" step="0.01" value="1"></label>
+      <label>Angle θ <input id="angle" type="range" min="0" max="6.283" step="0.01" value="0"></label>
+      <label>Oscillate <input id="osc" type="checkbox"></label>
+      <label>ω <input id="omega" type="range" min="0" max="10" step="0.1" value="1"></label>
+      <label>Precision <select id="precision"><option>double</option><option>high</option></select></label>
+      <button id="step">Step</button>
+      <button id="reset">Reset View</button>
+    </div>
+    <div class="status" id="status"></div>
+  </section>
+
+  <section id="canvas-wrap">
+    <canvas id="viz" width="800" height="600"></canvas>
+  </section>
+
+  <section id="info">
+    <h2>Diagnostics</h2>
+    <pre id="diag"></pre>
+  </section>
+</main>
+
+<script src="pappus.js"></script>
+</body>
+</html>
