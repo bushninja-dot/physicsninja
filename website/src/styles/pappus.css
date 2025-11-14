@@ -1,0 +1,20 @@
+:root{
+  --bg:#0f1724; --panel:#0b1220; --accent:#6ee7b7; --muted:#94a3b8;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:var(--font); background:linear-gradient(180deg,var(--bg),#071029); color:#e6eef8;
+}
+header{padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.03)}
+h1{margin:0 0 6px 0; font-size:20px}
+main{display:grid; grid-template-columns:1fr; gap:12px; padding:18px}
+#controls{background:var(--panel); padding:12px; border-radius:8px}
+.control-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.control-row label{font-size:13px; color:var(--muted)}
+.control-row input[type=range]{width:140px}
+#canvas-wrap{background:transparent; display:flex; justify-content:center}
+canvas{border-radius:8px; box-shadow:0 6px 24px rgba(2,6,23,0.7); background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+.status{margin-top:8px; font-size:13px; color:var(--muted)}
+#info{background:#071123; padding:12px; border-radius:8px}
+pre{white-space:pre-wrap; word-break:break-word; margin:0; color:#cde9da}
