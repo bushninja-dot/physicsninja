@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Riemann Sphere Doppler Spiral</title>
+    <style> body { margin: 0; overflow: hidden; } </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Sphere (Riemann surface)
+        const sphereGeo = new THREE.SphereGeometry(1, 64, 32);
+        const sphereMat = new THREE.MeshPhongMaterial({ color: 0x444444, wireframe: true });
+        const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+        scene.add(sphere);
+
+        // North pole (infinity) glow
+        const npGeo = new THREE.SphereGeometry(0.05, 8, 8);
+        const npMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const northPole = new THREE.Mesh(npGeo, npMat);
+        northPole.position.set(0, 1, 0);
+        scene.add(northPole);
+
+        // Path: sample f(t) for t=0..20, project to sphere via stereo inverse
+        const pathPoints = [];
+        const s = new THREE.Vector3(0, 0, 0); // Temp for complex ops (hack: use vec2 for Re/Im)
+        function complexPow(baseRe, baseIm, exp) {
+            const mag = Math.sqrt(baseRe**2 + baseIm**2);
+            const arg = Math.atan2(baseIm, baseRe);
+            const resMag = mag ** exp;
+            const resArg = arg * exp;
+            return { re: resMag * Math.cos(resArg), im: resMag * Math.sin(resArg) };
+        }
+        function stereoToSphere(re, im) {
+            const r2 = re**2 + im**2;
+            const x = 2 * re / (1 + r2);
+            const y = 2 * im / (1 + r2);
+            const z = (r2 - 1) / (1 + r2);
+            const norm = Math.sqrt(x**2 + y**2 + z**2);
+            return new THREE.Vector3(x/norm, y/norm, z/norm); // Normalize (unit sphere)
+        }
+        // Params: s=i (ph 90°), d1=1.5, d2=2/3, q1=exp(i*0.5), q2=exp(i*1.5)
+        const d1 = 1.5, q1re = Math.cos(0.5), q1im = Math.sin(0.5);
+        const d2 = 1/d1, q2re = Math.cos(1.5), q2im = Math.sin(1.5);
+        for (let t = 0; t <= 20; t++) {
+            const stRe = Math.cos(Math.PI/2 * t), stIm = Math.sin(Math.PI/2 * t); // s^t = i^t
+            const l1 = complexPow(d1 * q1re, d1 * q1im, t); // Wait, no: (d1 q1)^t = d1^t * q1^t
+            const l1t = complexPow(d1, t); // Mag boost
+            const q1t = complexPow(q1re, q1im, t);
+            const term1 = { re: l1t.re * q1t.re - l1t.im * q1t.im, im: l1t.re * q1t.im + l1t.im * q1t.re };
+            const l2t = complexPow(d2, t);
+            const q2t = complexPow(q2re, q2im, t);
+            const term2 = { re: l2t.re * q2t.re - l2t.im * q2t.im, im: l2t.re * q2t.im + l2t.im * q2t.re };
+            const fre = stRe * (term1.re + term2.re) - stIm * (term1.im + term2.im);
+            const fim = stRe * (term1.im + term2.im) + stIm * (term1.re + term2.re);
+            pathPoints.push(stereoToSphere(fre, fim));
+        }
+        const pathCurve = new THREE.CatmullRomCurve3(pathPoints);
+        const pathGeo = new THREE.TubeGeometry(pathCurve, 64, 0.02, 8, false);
+        const pathMat = new THREE.MeshPhongMaterial({ color: 0x00ffff, emissive: 0x004444 });
+        const path = new THREE.Mesh(pathGeo, pathMat);
+        scene.add(path);
+
+        // Lights
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        camera.position.set(0, 0, 3);
+        controls.enableDamping = true;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            sphere.rotation.y += 0.005;
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
